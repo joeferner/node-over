@@ -1,10 +1,16 @@
 {
-  "author": "Joe Ferner <joe@fernsroth.com>",
   "name": "over",
   "description": "JavaScript function overloading framework.",
+  "author": "Joe Ferner <joe@fernsroth.com>",
+  "keywords": ["function", "overload"],
   "version": "0.0.1",
+  "bugs": {
+    "url": "https://github.com/nearinfinity/node-over/issues"
+  },
+  "license": "MIT",
   "repository": {
-    "url": ""
+    "type": "git",
+    "url": "https://github.com/nearinfinity/node-over.git"
   },
   "main": "overload.js",
   "scripts": {
