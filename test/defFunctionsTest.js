@@ -61,5 +61,45 @@ module.exports = {
   'numberOptional, bad': function (test) {
     test.equals(overload.numberOptional('test'), false);
     test.done();
+  },
+
+  'array, good': function (test) {
+    test.equals(overload.array([5]), true);
+    test.done();
+  },
+
+  'array, bad': function (test) {
+    test.equals(overload.array(5), false);
+    test.done();
+  },
+
+  'arrayOptional, good': function (test) {
+    test.equals(overload.arrayOptional([5]), true);
+    test.done();
+  },
+
+  'arrayOptional, bad': function (test) {
+    test.equals(overload.arrayOptional(5), false);
+    test.done();
+  },
+
+  'object, good': function (test) {
+    test.equals(overload.object({}), true);
+    test.done();
+  },
+
+  'object, bad': function (test) {
+    test.equals(overload.object(5), false);
+    test.done();
+  },
+
+  'objectOptional, good': function (test) {
+    test.equals(overload.objectOptional({}), true);
+    test.done();
+  },
+
+  'objectOptional, bad': function (test) {
+    test.equals(overload.objectOptional(5), false);
+    test.done();
   }
 };

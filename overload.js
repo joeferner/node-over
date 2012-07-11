@@ -89,3 +89,21 @@ overload.numberOptional = function numberOptional(arg) {
   return typeof(arg) === 'number';
 };
 overload.numberOptional.optional = true;
+
+overload.array = function array(arg) {
+  return arg instanceof Array;
+};
+
+overload.arrayOptional = function arrayOptional(arg) {
+  return arg instanceof Array;
+};
+overload.arrayOptional.optional = true;
+
+overload.object = function object(arg) {
+  return typeof(arg) === 'object';
+};
+
+overload.objectOptional = function objectOptional(arg) {
+  return typeof(arg) === 'object';
+};
+overload.objectOptional.optional = true;
