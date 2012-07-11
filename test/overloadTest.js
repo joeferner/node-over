@@ -131,6 +131,33 @@ module.exports = {
     test.done();
   },
 
+  'optional parameter, with default value': function (test) {
+    var called = 0;
+    var val = null;
+    var fn = overload([
+      [overload.numberOptionalWithDefault(5), function (n) {
+        called++;
+        val = n;
+      }]
+    ]);
+    fn();
+    test.equals(called, 1, 'overload not called');
+    test.equals(val, 5);
+    test.done();
+  },
+
+  'callback, with default value': function (test) {
+    var called = 0;
+    var fn = overload([
+      [overload.callbackOptional, function (callback) {
+        callback();
+      }]
+    ]);
+    fn(function () { called++; });
+    test.equals(called, 1, 'overload not called');
+    test.done();
+  },
+
   'complex': function (test) {
     var called = 0;
     var args = null;

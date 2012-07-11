@@ -3,12 +3,13 @@
 var overload = module.exports = function (overloadDefs) {
   var self = this;
   return function () {
-    var overloadMatch = findOverload(overloadDefs, arguments);
+    var args = Array.prototype.slice.call(arguments);
+    var overloadMatch = findOverload(overloadDefs, args);
     if (!overloadMatch) {
       throw new Error(createErrorMessage('No match found.', overloadDefs));
     }
     var overloadFn = overloadMatch[overloadMatch.length - 1];
-    overloadFn.apply(self, arguments);
+    overloadFn.apply(self, args);
   };
 };
 
@@ -28,14 +29,20 @@ function isMatch(overloadDef, args) {
     if (typeof(overloadDef[overloadDefIdx]) !== 'function') {
       throw new Error("Invalid overload definition. Array should only contain functions.");
     }
-    if (!overloadDef[overloadDefIdx](args[argIdx])) {
+    var result = overloadDef[overloadDefIdx](args[argIdx]);
+    if (result) {
+      if (result.defaultValue) {
+        args[argIdx] = result.defaultValue;
+      }
+      argIdx++;
+    } else {
       if (overloadDef[overloadDefIdx].optional) {
         continue;
       }
       return false;
     }
-    argIdx++;
   }
+  //console.log(overloadDefIdx, overloadDef.length - 1, argIdx, args.length);
   if (overloadDefIdx === overloadDef.length - 1 && argIdx === args.length) {
     return true;
   }
@@ -63,47 +70,111 @@ function createErrorMessage(message, overloadDefs) {
   return message;
 }
 
+// --- func
 overload.func = function func(arg) {
   return typeof(arg) === 'function';
 };
 
 overload.funcOptional = function funcOptional(arg) {
-  return typeof(arg) === 'function';
+  return overload.func(arg);
 };
 overload.funcOptional.optional = true;
 
+overload.funcOptionalWithDefault = function (def) {
+  return function funcOptionalWithDefault(arg) {
+    if (arg === undefined) {
+      return { defaultValue: def };
+    }
+    return overload.func(arg);
+  }
+};
+overload.funcOptionalWithDefault.optional = true;
+
+// --- callback
+overload.callbackOptional = function callbackOptional(arg) {
+  if (arg === undefined) {
+    return { defaultValue: function () {} };
+  }
+  return overload.func(arg);
+};
+overload.callbackOptional.optional = true;
+
+// --- string
 overload.string = function string(arg) {
   return typeof(arg) === 'string';
 };
 
 overload.stringOptional = function stringOptional(arg) {
-  return typeof(arg) === 'string';
+  return overload.string(arg);
 };
 overload.stringOptional.optional = true;
 
+overload.stringOptionalWithDefault = function (def) {
+  return function stringOptionalWithDefault(arg) {
+    if (arg === undefined) {
+      return { defaultValue: def };
+    }
+    return overload.string(arg);
+  }
+};
+overload.stringOptionalWithDefault.optional = true;
+
+// --- number
 overload.number = function number(arg) {
   return typeof(arg) === 'number';
 };
 
 overload.numberOptional = function numberOptional(arg) {
-  return typeof(arg) === 'number';
+  return overload.number(arg);
 };
 overload.numberOptional.optional = true;
 
+overload.numberOptionalWithDefault = function (def) {
+  return function numberOptionalWithDefault(arg) {
+    if (arg === undefined) {
+      return { defaultValue: def };
+    }
+    return overload.number(arg);
+  }
+};
+overload.numberOptionalWithDefault.optional = true;
+
+// --- array
 overload.array = function array(arg) {
   return arg instanceof Array;
 };
 
 overload.arrayOptional = function arrayOptional(arg) {
-  return arg instanceof Array;
+  return overload.array(arg);
 };
 overload.arrayOptional.optional = true;
 
+overload.arrayOptionalWithDefault = function (def) {
+  return function arrayOptionalWithDefault(arg) {
+    if (arg === undefined) {
+      return { defaultValue: def };
+    }
+    return overload.array(arg);
+  }
+};
+overload.arrayOptionalWithDefault.optional = true;
+
+// --- object
 overload.object = function object(arg) {
   return typeof(arg) === 'object';
 };
 
 overload.objectOptional = function objectOptional(arg) {
-  return typeof(arg) === 'object';
+  return overload.object(arg);
 };
 overload.objectOptional.optional = true;
+
+overload.objectOptionalWithDefault = function (def) {
+  return function objectOptionalWithDefault(arg) {
+    if (arg === undefined) {
+      return { defaultValue: def };
+    }
+    return overload.object(arg);
+  }
+};
+overload.objectOptionalWithDefault.optional = true;

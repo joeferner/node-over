@@ -15,7 +15,7 @@ var over = require('over');
 
 var myfn = over([
   [over.string, function (str) { console.log('got a string' + str); }],
-  [over.string, over.number, over.funcOptional, function (str, number, callback) {
+  [over.string, over.numberOptionalWithDefault(5), over.callbackOptional, function (str, number, callback) {
     console.log('got a string and a number and a callback');
     callback(str, number);
   }]
@@ -26,14 +26,29 @@ var myfn = over([
 
 * func
 * funcOptional
+* funcOptionalWithDefault
+* callbackOptional  // Will return an empty function of parameter is not given
 * string
 * stringOptional
+* stringOptionalWithDefault
 * number
 * numberOptional
+* numberOptionalWithDefault
 * array
 * arrayOptional
+* arrayOptionalWithDefault
 * object
 * objectOptional
+* objectOptionalWithDefault
+
+The built in optional functions with a suffix of "WithDefault" take a default value as well which will be used if
+it is not passed in.
+
+```javascript
+var myfn = over([
+  [over.stringOptionalWithDefault('default value'), function (str) { console.log('got a string' + str); }],
+]);
+```
 
 ## Write your own test functions
 
@@ -41,10 +56,26 @@ var myfn = over([
 function greaterThan5Optional(arg) {
   return arg > 5;
 }
-myTestFn.optional = true; // mark it as an optional parameter
+greaterThan5Optional.optional = true; // mark it as an optional parameter
 
 var myfn = over([
-  [greaterThan5Optional, function (str) { console.log('got a string' + str); }]
+  [greaterThan5Optional, function (v) { console.log('got a value' + v); }]
+]);
+```
+
+```javascript
+function greaterThan5OptionalWithDefault(def) {
+  return function greaterThan5OptionalWithDefault2(arg) {
+    if (arg === undefined) {
+      return { defaultValue: def };
+    }
+    return arg > 5;
+  }
+}
+greaterThan5OptionalWithDefault.optional = true; // mark it as an optional parameter
+
+var myfn = over([
+  [greaterThan5OptionalWithDefault, function (v) { console.log('got a value' + v); }]
 ]);
 ```
 

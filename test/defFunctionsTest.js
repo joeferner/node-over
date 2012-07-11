@@ -3,103 +3,68 @@
 var overload = require('../');
 
 module.exports = {
-  'func, good': function (test) {
-    test.equals(overload.func(function () {}), true);
+  'required, good': function (test) {
+    var items = [
+      { fn: overload.func, param: function () {} },
+      { fn: overload.funcOptional, param: function () {} },
+      { fn: overload.funcOptionalWithDefault(function () {}), param: function () {} },
+      { fn: overload.callbackOptional, param: function () {} },
+      { fn: overload.string, param: 'test' },
+      { fn: overload.stringOptional, param: 'test' },
+      { fn: overload.stringOptionalWithDefault('test'), param: 'test' },
+      { fn: overload.number, param: 5 },
+      { fn: overload.numberOptional, param: 5 },
+      { fn: overload.numberOptionalWithDefault(5), param: 5 },
+      { fn: overload.array, param: [1] },
+      { fn: overload.arrayOptional, param: [1] },
+      { fn: overload.arrayOptionalWithDefault([1]), param: [1] },
+      { fn: overload.object, param: {} },
+      { fn: overload.objectOptional, param: {} },
+      { fn: overload.objectOptionalWithDefault({}), param: {} }
+    ];
+    items.forEach(function (item) {
+      test.equals(item.fn(item.param), true);
+    });
     test.done();
   },
 
-  'func, bad': function (test) {
-    test.equals(overload.func(5), false);
+  'required, bad': function (test) {
+    var items = [
+      { fn: overload.func, param: 5 },
+      { fn: overload.funcOptional, param: 5 },
+      { fn: overload.funcOptionalWithDefault(function () {}), param: 5 },
+      { fn: overload.callbackOptional, param: 5 },
+      { fn: overload.string, param: 5 },
+      { fn: overload.stringOptional, param: 5 },
+      { fn: overload.stringOptionalWithDefault('test'), param: 5 },
+      { fn: overload.number, param: 'test' },
+      { fn: overload.numberOptional, param: 'test' },
+      { fn: overload.numberOptionalWithDefault(5), param: 'test' },
+      { fn: overload.array, param: 5 },
+      { fn: overload.arrayOptional, param: 5 },
+      { fn: overload.arrayOptionalWithDefault([]), param: 5 },
+      { fn: overload.object, param: 5 },
+      { fn: overload.objectOptional, param: 5 },
+      { fn: overload.objectOptionalWithDefault({}), param: 5 }
+    ];
+    items.forEach(function (item) {
+      test.equals(item.fn(item.param), false);
+    });
     test.done();
   },
 
-  'funcOptional, good': function (test) {
-    test.equals(overload.funcOptional(function () {}), true);
-    test.done();
-  },
-
-  'funcOptional, bad': function (test) {
-    test.equals(overload.funcOptional(5), false);
-    test.done();
-  },
-
-  'string, good': function (test) {
-    test.equals(overload.string('test'), true);
-    test.done();
-  },
-
-  'string, bad': function (test) {
-    test.equals(overload.string(5), false);
-    test.done();
-  },
-
-  'stringOptional, good': function (test) {
-    test.equals(overload.stringOptional('test'), true);
-    test.done();
-  },
-
-  'stringOptional, bad': function (test) {
-    test.equals(overload.stringOptional(5), false);
-    test.done();
-  },
-
-  'number, good': function (test) {
-    test.equals(overload.number(5), true);
-    test.done();
-  },
-
-  'number, bad': function (test) {
-    test.equals(overload.number('test'), false);
-    test.done();
-  },
-
-  'numberOptional, good': function (test) {
-    test.equals(overload.numberOptional(5), true);
-    test.done();
-  },
-
-  'numberOptional, bad': function (test) {
-    test.equals(overload.numberOptional('test'), false);
-    test.done();
-  },
-
-  'array, good': function (test) {
-    test.equals(overload.array([5]), true);
-    test.done();
-  },
-
-  'array, bad': function (test) {
-    test.equals(overload.array(5), false);
-    test.done();
-  },
-
-  'arrayOptional, good': function (test) {
-    test.equals(overload.arrayOptional([5]), true);
-    test.done();
-  },
-
-  'arrayOptional, bad': function (test) {
-    test.equals(overload.arrayOptional(5), false);
-    test.done();
-  },
-
-  'object, good': function (test) {
-    test.equals(overload.object({}), true);
-    test.done();
-  },
-
-  'object, bad': function (test) {
-    test.equals(overload.object(5), false);
-    test.done();
-  },
-
-  'objectOptional, good': function (test) {
-    test.equals(overload.objectOptional({}), true);
-    test.done();
-  },
-
-  'objectOptional, bad': function (test) {
-    test.equals(overload.objectOptional(5), false);
+  'with defaults': function (test) {
+    var fn = function () {};
+    var items = [
+      { fn: overload.funcOptionalWithDefault(fn), expected: fn },
+      { fn: overload.stringOptionalWithDefault('test'), expected: 'test' },
+      { fn: overload.numberOptionalWithDefault(5), expected: 5 },
+      { fn: overload.arrayOptionalWithDefault([]), expected: [] },
+      { fn: overload.objectOptionalWithDefault({}), expected: {} }
+    ];
+    items.forEach(function (item) {
+      test.deepEqual(item.fn().defaultValue, item.expected);
+    });
     test.done();
   }
 };
