@@ -1,8 +1,20 @@
 'use strict';
 
-var overload = module.exports = function (overloadDefs) {
-  var self = this;
+// overloadDefs
+// self, overloadDefs
+var overload = module.exports = function () {
+  var self, selfSet = false, overloadDefs;
+  if (arguments.length === 1) {
+    overloadDefs = arguments[0];
+  } else {
+    selfSet = true;
+    self = arguments[0];
+    overloadDefs = arguments[1];
+  }
   return function () {
+    if (!selfSet) {
+      self = this;
+    }
     var args = Array.prototype.slice.call(arguments);
     var overloadMatch = findOverload(overloadDefs, args);
     if (!overloadMatch) {
