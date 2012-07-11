@@ -52,6 +52,8 @@ var myfn = over([
 
 ## Write your own test functions
 
+Simple optional test
+
 ```javascript
 function greaterThan5Optional(arg) {
   return arg > 5;
@@ -62,6 +64,8 @@ var myfn = over([
   [greaterThan5Optional, function (v) { console.log('got a value' + v); }]
 ]);
 ```
+
+Optional test with default
 
 ```javascript
 function greaterThan5OptionalWithDefault(def) {
