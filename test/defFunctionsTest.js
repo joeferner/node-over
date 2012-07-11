@@ -53,6 +53,25 @@ module.exports = {
     test.done();
   },
 
+  'optional, null': function (test) {
+    var items = [
+      { fn: overload.funcOptional },
+      { fn: overload.stringOptional },
+      { fn: overload.numberOptional },
+      { fn: overload.arrayOptional },
+      { fn: overload.objectOptional }
+    ];
+    items.forEach(function (item) {
+      test.equals(item.fn(null), true, 'invalid results for function: ' + item.fn.name);
+    });
+    test.done();
+  },
+
+  'optional, callback': function (test) {
+    test.equals(typeof(overload.callbackOptional(null).defaultValue), 'function');
+    test.done();
+  },
+
   'with defaults': function (test) {
     var fn = function () {};
     var items = [

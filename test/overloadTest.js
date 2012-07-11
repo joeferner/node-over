@@ -87,7 +87,7 @@ module.exports = {
     test.done();
   },
 
-  'optional parameter, valid args not given': function (test) {
+  'optional parameter, no args': function (test) {
     var called = 0;
     var fn = overload([
       [overload.funcOptional, function (fn) {

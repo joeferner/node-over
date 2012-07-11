@@ -51,6 +51,10 @@ function isMatch(overloadDef, args) {
       if (result.hasOwnProperty('defaultValue')) {
         newArgs.push(result.defaultValue);
       } else {
+        if (overloadDef[overloadDefIdx].optional && !args[argIdx]) {
+          newArgs.push(undefined);
+          continue;
+        }
         newArgs.push(args[argIdx]);
         argIdx++;
       }
@@ -100,6 +104,9 @@ overload.func = function func(arg) {
 };
 
 overload.funcOptional = function funcOptional(arg) {
+  if (!arg) {
+    return true;
+  }
   return overload.func(arg);
 };
 overload.funcOptional.optional = true;
@@ -116,7 +123,7 @@ overload.funcOptionalWithDefault.optional = true;
 
 // --- callback
 overload.callbackOptional = function callbackOptional(arg) {
-  if (arg === undefined) {
+  if (!arg) {
     return { defaultValue: function defaultCallback() {} };
   }
   return overload.func(arg);
@@ -129,6 +136,9 @@ overload.string = function string(arg) {
 };
 
 overload.stringOptional = function stringOptional(arg) {
+  if (!arg) {
+    return true;
+  }
   return overload.string(arg);
 };
 overload.stringOptional.optional = true;
@@ -149,6 +159,9 @@ overload.number = function number(arg) {
 };
 
 overload.numberOptional = function numberOptional(arg) {
+  if (!arg) {
+    return true;
+  }
   return overload.number(arg);
 };
 overload.numberOptional.optional = true;
@@ -169,6 +182,9 @@ overload.array = function array(arg) {
 };
 
 overload.arrayOptional = function arrayOptional(arg) {
+  if (!arg) {
+    return true;
+  }
   return overload.array(arg);
 };
 overload.arrayOptional.optional = true;
@@ -189,6 +205,9 @@ overload.object = function object(arg) {
 };
 
 overload.objectOptional = function objectOptional(arg) {
+  if (!arg) {
+    return true;
+  }
   return overload.object(arg);
 };
 overload.objectOptional.optional = true;
