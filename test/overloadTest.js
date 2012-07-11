@@ -54,5 +54,75 @@ module.exports = {
 
     }
     test.done();
+  },
+
+  'optional parameter, valid args': function (test) {
+    var called = 0;
+    var argFnCalled = 0;
+    var fn = overload([
+      [overload.funcOptional, function (fn) {
+        called++;
+        fn();
+      }]
+    ]);
+    fn(function () { argFnCalled++; });
+    test.equals(called, 1, 'overload not called');
+    test.equals(argFnCalled, 1, 'arg function not called');
+    test.done();
+  },
+
+  'optional parameter, valid args not given': function (test) {
+    var called = 0;
+    var fn = overload([
+      [overload.funcOptional, function (fn) {
+        called++;
+        if (fn) {
+          test.fail('no function should be passed');
+        }
+      }]
+    ]);
+    fn();
+    test.equals(called, 1, 'overload not called');
+    test.done();
+  },
+
+  'optional parameter, invalid args': function (test) {
+    var called = 0;
+    var fn = overload([
+      [overload.funcOptional, function () { called++; }]
+    ]);
+    try {
+      fn(1);
+      test.fail('should throw exception');
+    } catch (ex) {
+
+    }
+    test.done();
+  },
+
+  'multiple overloads, valid args': function (test) {
+    var called = 0;
+    var fn = overload([
+      [overload.number, function (fn) { test.fail('this function should not be called'); }],
+      [overload.string, function (fn) { called++; }]
+    ]);
+    fn('test');
+    test.equals(called, 1, 'overload not called');
+    test.done();
+  },
+
+  'multiple overloads, invalid args': function (test) {
+    var called = 0;
+    var fn = overload([
+      [overload.number, function (fn) { test.fail('this function should not be called'); }],
+      [overload.string, function (fn) { called++; }]
+    ]);
+    try {
+      fn(function () {});
+      test.fail('should throw exception');
+    } catch (ex) {
+
+    }
+    test.done();
   }
 };

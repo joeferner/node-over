@@ -22,13 +22,21 @@ var findOverload = overload.findOverload = function (overloadDefs, args) {
 };
 
 function isMatch(overloadDef, args) {
-  var i;
-  for (i = 0; i < overloadDef.length - 1 && i < args.length; i++) {
-    if (!overloadDef[i](args[i])) {
+  var overloadDefIdx;
+  var argIdx;
+  for (overloadDefIdx = 0, argIdx = 0; overloadDefIdx < overloadDef.length - 1; overloadDefIdx++) {
+    if (typeof(overloadDef[overloadDefIdx]) !== 'function') {
+      throw new Error("Invalid overload definition. Array should only contain functions.");
+    }
+    if (!overloadDef[overloadDefIdx](args[argIdx])) {
+      if (overloadDef[overloadDefIdx].optional) {
+        continue;
+      }
       return false;
     }
+    argIdx++;
   }
-  if (i === overloadDef.length - 1 && i === args.length) {
+  if (overloadDefIdx === overloadDef.length - 1 && argIdx === args.length) {
     return true;
   }
   return false;
@@ -41,6 +49,9 @@ function createErrorMessage(message, overloadDefs) {
     var overloadDef = overloadDefs[i];
     var matchers = overloadDef.slice(0, overloadDef.length - 1);
     matchers = matchers.map(function (m) {
+      if (!m) {
+        return '[invalid argument definition]';
+      }
       return m.name || m;
     });
     if (matchers.length === 0) {
@@ -55,3 +66,26 @@ function createErrorMessage(message, overloadDefs) {
 overload.func = function func(arg) {
   return typeof(arg) === 'function';
 };
+
+overload.funcOptional = function funcOptional(arg) {
+  return typeof(arg) === 'function';
+};
+overload.funcOptional.optional = true;
+
+overload.string = function string(arg) {
+  return typeof(arg) === 'string';
+};
+
+overload.stringOptional = function stringOptional(arg) {
+  return typeof(arg) === 'string';
+};
+overload.stringOptional.optional = true;
+
+overload.number = function number(arg) {
+  return typeof(arg) === 'number';
+};
+
+overload.numberOptional = function numberOptional(arg) {
+  return typeof(arg) === 'number';
+};
+overload.numberOptional.optional = true;
