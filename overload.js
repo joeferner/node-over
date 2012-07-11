@@ -46,12 +46,15 @@ function isMatch(overloadDef, args) {
     if (typeof(overloadDef[overloadDefIdx]) !== 'function') {
       throw new Error("Invalid overload definition. Array should only contain functions.");
     }
+    //console.log('overloadDef/arg:', overloadDef[overloadDefIdx], args[argIdx]);
     var result = overloadDef[overloadDefIdx](args[argIdx]);
+    //console.log('result:', result);
     if (result) {
       if (result.hasOwnProperty('defaultValue')) {
         newArgs.push(result.defaultValue);
       } else {
         if (overloadDef[overloadDefIdx].optional && !args[argIdx]) {
+          argIdx++;
           newArgs.push(undefined);
           continue;
         }
@@ -66,8 +69,8 @@ function isMatch(overloadDef, args) {
       return false;
     }
   }
-  //console.log(overloadDefIdx, overloadDef.length - 1, argIdx, args.length, newArgs.length);
-  if (overloadDefIdx === overloadDef.length - 1 && argIdx === args.length) {
+  //console.log('compares', overloadDefIdx, overloadDef.length - 1, argIdx, args.length, newArgs.length);
+  if (overloadDefIdx === overloadDef.length - 1 && argIdx >= args.length) {
     return newArgs;
   }
   return false;
