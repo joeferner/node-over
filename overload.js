@@ -27,6 +27,9 @@ var overload = module.exports = function () {
 
 var findOverload = overload.findOverload = function (overloadDefs, args) {
   for (var i = 0; i < overloadDefs.length; i++) {
+    if (i === overloadDefs.length - 1 && typeof(overloadDefs[i]) === 'function') {
+      return [overloadDefs[i]];
+    }
     if (isMatch(overloadDefs[i], args)) {
       return overloadDefs[i];
     }
@@ -66,17 +69,21 @@ function createErrorMessage(message, overloadDefs) {
   message += '  Possible matches:\n';
   for (var i = 0; i < overloadDefs.length; i++) {
     var overloadDef = overloadDefs[i];
-    var matchers = overloadDef.slice(0, overloadDef.length - 1);
-    matchers = matchers.map(function (m) {
-      if (!m) {
-        return '[invalid argument definition]';
-      }
-      return m.name || m;
-    });
-    if (matchers.length === 0) {
-      message += '   ()\n';
+    if (typeof(overloadDef) === 'function') {
+      message += '   [default]\n';
     } else {
-      message += '   (' + matchers.join(', ') + ')\n';
+      var matchers = overloadDef.slice(0, overloadDef.length - 1);
+      matchers = matchers.map(function (m) {
+        if (!m) {
+          return '[invalid argument definition]';
+        }
+        return m.name || m;
+      });
+      if (matchers.length === 0) {
+        message += '   ()\n';
+      } else {
+        message += '   (' + matchers.join(', ') + ')\n';
+      }
     }
   }
   return message;

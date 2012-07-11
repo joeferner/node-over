@@ -27,6 +27,22 @@ module.exports = {
     test.done();
   },
 
+  'default callback': function (test) {
+    var called = 0;
+    var args = null;
+    var fn = overload([
+      [overload.func, function (fn) { test.fail('should not be called.'); }],
+      function () {
+        called++;
+        args = Array.prototype.slice.call(arguments);
+      }
+    ]);
+    fn('test');
+    test.equals(called, 1, 'overload not called');
+    test.deepEqual(args, ['test']);
+    test.done();
+  },
+
   'one parameter, valid args': function (test) {
     var called = 0;
     var argFnCalled = 0;

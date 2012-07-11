@@ -18,7 +18,10 @@ var myfn = over([
   [over.string, over.numberOptionalWithDefault(5), over.callbackOptional, function (str, number, callback) {
     console.log('got a string and a number and a callback');
     callback(str, number);
-  }]
+  }],
+  function() {
+    // default function if nothing else matches
+  }
 ]);
 ```
 
