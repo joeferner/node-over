@@ -102,20 +102,25 @@ module.exports = {
 
   'multiple overloads, valid args': function (test) {
     var called = 0;
+    var val = null;
     var fn = overload([
-      [overload.number, function (fn) { test.fail('this function should not be called'); }],
-      [overload.string, function (fn) { called++; }]
+      [overload.number, function (n) { test.fail('this function should not be called'); }],
+      [overload.string, function (s) {
+        val = s;
+        called++;
+      }]
     ]);
     fn('test');
     test.equals(called, 1, 'overload not called');
+    test.equals(val, 'test', 'overload called with wrong value');
     test.done();
   },
 
   'multiple overloads, invalid args': function (test) {
     var called = 0;
     var fn = overload([
-      [overload.number, function (fn) { test.fail('this function should not be called'); }],
-      [overload.string, function (fn) { called++; }]
+      [overload.number, function (n) { test.fail('this function should not be called'); }],
+      [overload.string, function (s) { called++; }]
     ]);
     try {
       fn(function () {});
@@ -123,6 +128,23 @@ module.exports = {
     } catch (ex) {
 
     }
+    test.done();
+  },
+
+  'complex': function (test) {
+    var called = 0;
+    var args = null;
+    var fn = overload([
+      [overload.string, function () { test.fail('this function should not be called'); }],
+      [overload.string, overload.number, overload.funcOptional, function () {
+        args = Array.prototype.slice.call(arguments, 0);
+        called++;
+      }]
+    ]);
+    var argFn = function () {};
+    fn('test', 5, argFn);
+    test.equals(called, 1, 'overload not called');
+    test.deepEqual(args, ['test', 5, argFn], 'overload called with wrong args');
     test.done();
   }
 };
