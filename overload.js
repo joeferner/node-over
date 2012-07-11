@@ -43,7 +43,7 @@ function isMatch(overloadDef, args) {
     }
     var result = overloadDef[overloadDefIdx](args[argIdx]);
     if (result) {
-      if (result.defaultValue) {
+      if (result.hasOwnProperty('defaultValue')) {
         args[argIdx] = result.defaultValue;
       }
       argIdx++;
