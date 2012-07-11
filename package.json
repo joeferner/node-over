@@ -1,6 +1,6 @@
 {
   "author": "Joe Ferner <joe@fernsroth.com>",
-  "name": "overload",
+  "name": "over",
   "description": "JavaScript function overloading framework.",
   "version": "0.0.1",
   "repository": {

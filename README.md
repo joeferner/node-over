@@ -1,0 +1,74 @@
+# over
+
+JavaScript function overloading framework.
+
+## Installation
+
+```bash
+$ npm install over
+```
+
+## Quick Examples
+
+```javascript
+var over = require('over');
+
+var myfn = over([
+  [over.string, function (str) { console.log('got a string' + str); }],
+  [over.string, over.number, over.funcOptional, function (str, number, callback) {
+    console.log('got a string and a number and a callback');
+    callback(str, number);
+  }]
+]);
+```
+
+## Builtin Test functions
+
+* func
+* funcOptional
+* string
+* stringOptional
+* number
+* numberOptional
+* array
+* arrayOptional
+* object
+* objectOptional
+
+## Write your own test functions
+
+```javascript
+function greaterThan5Optional(arg) {
+  return arg > 5;
+}
+myTestFn.optional = true; // mark it as an optional parameter
+
+var myfn = over([
+  [greaterThan5Optional, function (str) { console.log('got a string' + str); }]
+]);
+```
+
+## License
+
+(The MIT License)
+
+Copyright (c) 2012 Near Infinity Corporation
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
