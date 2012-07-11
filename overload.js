@@ -16,22 +16,23 @@ var overload = module.exports = function () {
       self = this;
     }
     var args = Array.prototype.slice.call(arguments);
-    var overloadMatch = findOverload(overloadDefs, args);
-    if (!overloadMatch) {
+    var overloadMatchData = findOverload(overloadDefs, args);
+    if (!overloadMatchData) {
       throw new Error(createErrorMessage('No match found.', overloadDefs));
     }
-    var overloadFn = overloadMatch[overloadMatch.length - 1];
-    overloadFn.apply(self, args);
+    var overloadFn = overloadMatchData.def[overloadMatchData.def.length - 1];
+    overloadFn.apply(self, overloadMatchData.args);
   };
 };
 
 var findOverload = overload.findOverload = function (overloadDefs, args) {
   for (var i = 0; i < overloadDefs.length; i++) {
     if (i === overloadDefs.length - 1 && typeof(overloadDefs[i]) === 'function') {
-      return [overloadDefs[i]];
+      return { args: args, def: [overloadDefs[i]] };
     }
-    if (isMatch(overloadDefs[i], args)) {
-      return overloadDefs[i];
+    var newArgs;
+    if (newArgs = isMatch(overloadDefs[i], args)) {
+      return { args: newArgs, def: overloadDefs[i] };
     }
   }
   return null;
@@ -40,6 +41,7 @@ var findOverload = overload.findOverload = function (overloadDefs, args) {
 function isMatch(overloadDef, args) {
   var overloadDefIdx;
   var argIdx;
+  var newArgs = [];
   for (overloadDefIdx = 0, argIdx = 0; overloadDefIdx < overloadDef.length - 1; overloadDefIdx++) {
     if (typeof(overloadDef[overloadDefIdx]) !== 'function') {
       throw new Error("Invalid overload definition. Array should only contain functions.");
@@ -47,19 +49,22 @@ function isMatch(overloadDef, args) {
     var result = overloadDef[overloadDefIdx](args[argIdx]);
     if (result) {
       if (result.hasOwnProperty('defaultValue')) {
-        args[argIdx] = result.defaultValue;
+        newArgs.push(result.defaultValue);
+      } else {
+        newArgs.push(args[argIdx]);
+        argIdx++;
       }
-      argIdx++;
     } else {
       if (overloadDef[overloadDefIdx].optional) {
+        newArgs.push(undefined);
         continue;
       }
       return false;
     }
   }
-  //console.log(overloadDefIdx, overloadDef.length - 1, argIdx, args.length);
+  //console.log(overloadDefIdx, overloadDef.length - 1, argIdx, args.length, newArgs.length);
   if (overloadDefIdx === overloadDef.length - 1 && argIdx === args.length) {
-    return true;
+    return newArgs;
   }
   return false;
 }
@@ -112,7 +117,7 @@ overload.funcOptionalWithDefault.optional = true;
 // --- callback
 overload.callbackOptional = function callbackOptional(arg) {
   if (arg === undefined) {
-    return { defaultValue: function () {} };
+    return { defaultValue: function defaultCallback() {} };
   }
   return overload.func(arg);
 };
