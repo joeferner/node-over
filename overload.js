@@ -53,7 +53,7 @@ function isMatch(overloadDef, args) {
       if (result.hasOwnProperty('defaultValue')) {
         newArgs.push(result.defaultValue);
       } else {
-        if (overloadDef[overloadDefIdx].optional && !args[argIdx]) {
+        if (overloadDef[overloadDefIdx].optional && args[argIdx] === null) {
           argIdx++;
           newArgs.push(overloadDef[overloadDefIdx].defaultValue);
           continue;
