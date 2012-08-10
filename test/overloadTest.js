@@ -6,10 +6,11 @@ module.exports = {
   'no parameters, valid args': function (test) {
     var called = 0;
     var fn = overload([
-      [function () { called++; }]
+      [function () { called++; return 42; }]
     ]);
-    fn();
+    var ret = fn();
     test.equals(called, 1);
+    test.equals(ret, 42);
     test.done();
   },
 

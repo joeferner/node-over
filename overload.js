@@ -21,7 +21,7 @@ var overload = module.exports = function () {
       throw new Error(createErrorMessage('No match found.', overloadDefs));
     }
     var overloadFn = overloadMatchData.def[overloadMatchData.def.length - 1];
-    overloadFn.apply(self, overloadMatchData.args);
+    return overloadFn.apply(self, overloadMatchData.args);
   };
 };
 
