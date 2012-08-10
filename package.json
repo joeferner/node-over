@@ -3,7 +3,7 @@
   "description": "JavaScript function overloading framework.",
   "author": "Joe Ferner <joe@fernsroth.com>",
   "keywords": ["function", "overload"],
-  "version": "0.0.4",
+  "version": "0.0.5",
   "bugs": {
     "url": "https://github.com/nearinfinity/node-over/issues"
   },
