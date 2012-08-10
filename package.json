@@ -14,7 +14,7 @@
   },
   "main": "overload.js",
   "scripts": {
-    "test": "nodeunit test"
+    "test": "./node_modules/.bin/nodeunit test"
   },
   "dependencies": {
 

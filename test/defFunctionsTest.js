@@ -82,7 +82,7 @@ module.exports = {
       { fn: overload.objectOptionalWithDefault({}), expected: {} }
     ];
     items.forEach(function (item) {
-      test.deepEqual(item.fn().defaultValue, item.expected);
+      test.deepEqual(item.fn.defaultValue, item.expected);
     });
     test.done();
   }

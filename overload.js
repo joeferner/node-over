@@ -55,7 +55,7 @@ function isMatch(overloadDef, args) {
       } else {
         if (overloadDef[overloadDefIdx].optional && !args[argIdx]) {
           argIdx++;
-          newArgs.push(undefined);
+          newArgs.push(overloadDef[overloadDefIdx].defaultValue);
           continue;
         }
         newArgs.push(args[argIdx]);
@@ -63,7 +63,7 @@ function isMatch(overloadDef, args) {
       }
     } else {
       if (overloadDef[overloadDefIdx].optional) {
-        newArgs.push(undefined);
+        newArgs.push(overloadDef[overloadDefIdx].defaultValue);
         continue;
       }
       return false;
@@ -115,14 +115,16 @@ overload.funcOptional = function funcOptional(arg) {
 overload.funcOptional.optional = true;
 
 overload.funcOptionalWithDefault = function (def) {
-  return function funcOptionalWithDefault(arg) {
+  var fn = function funcOptionalWithDefault(arg) {
     if (arg === undefined) {
-      return { defaultValue: def };
+      return false;
     }
     return overload.func(arg);
-  }
+  };
+  fn.optional = true;
+  fn.defaultValue = def;
+  return fn;
 };
-overload.funcOptionalWithDefault.optional = true;
 
 // --- callback
 overload.callbackOptional = function callbackOptional(arg) {
@@ -147,14 +149,16 @@ overload.stringOptional = function stringOptional(arg) {
 overload.stringOptional.optional = true;
 
 overload.stringOptionalWithDefault = function (def) {
-  return function stringOptionalWithDefault(arg) {
+  var fn = function stringOptionalWithDefault(arg) {
     if (arg === undefined) {
-      return { defaultValue: def };
+      return false;
     }
     return overload.string(arg);
-  }
+  };
+  fn.optional = true;
+  fn.defaultValue = def;
+  return fn;
 };
-overload.stringOptionalWithDefault.optional = true;
 
 // --- number
 overload.number = function number(arg) {
@@ -170,14 +174,16 @@ overload.numberOptional = function numberOptional(arg) {
 overload.numberOptional.optional = true;
 
 overload.numberOptionalWithDefault = function (def) {
-  return function numberOptionalWithDefault(arg) {
+  var fn = function numberOptionalWithDefault(arg) {
     if (arg === undefined) {
-      return { defaultValue: def };
+      return false;
     }
     return overload.number(arg);
-  }
+  };
+  fn.optional = true;
+  fn.defaultValue = def;
+  return fn;
 };
-overload.numberOptionalWithDefault.optional = true;
 
 // --- array
 overload.array = function array(arg) {
@@ -193,14 +199,16 @@ overload.arrayOptional = function arrayOptional(arg) {
 overload.arrayOptional.optional = true;
 
 overload.arrayOptionalWithDefault = function (def) {
-  return function arrayOptionalWithDefault(arg) {
+  var fn = function arrayOptionalWithDefault(arg) {
     if (arg === undefined) {
-      return { defaultValue: def };
+      return false;
     }
     return overload.array(arg);
-  }
+  };
+  fn.optional = true;
+  fn.defaultValue = def;
+  return fn;
 };
-overload.arrayOptionalWithDefault.optional = true;
 
 // --- object
 overload.object = function object(arg) {
@@ -216,11 +224,13 @@ overload.objectOptional = function objectOptional(arg) {
 overload.objectOptional.optional = true;
 
 overload.objectOptionalWithDefault = function (def) {
-  return function objectOptionalWithDefault(arg) {
+  var fn = function objectOptionalWithDefault(arg) {
     if (arg === undefined) {
-      return { defaultValue: def };
+      return false;
     }
     return overload.object(arg);
-  }
+  };
+  fn.optional = true;
+  fn.defaultValue = def;
+  return fn;
 };
-overload.objectOptionalWithDefault.optional = true;

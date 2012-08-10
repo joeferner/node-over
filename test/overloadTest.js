@@ -151,12 +151,12 @@ module.exports = {
     var called = 0;
     var val = null;
     var fn = overload([
-      [overload.numberOptionalWithDefault(5), function (n) {
+      [overload.numberOptionalWithDefault(5), overload.func, function (n) {
         called++;
         val = n;
       }]
     ]);
-    fn();
+    fn(function() {});
     test.equals(called, 1, 'overload not called');
     test.equals(val, 5);
     test.done();
