@@ -162,6 +162,36 @@ module.exports = {
     test.done();
   },
 
+  'number optional parameter, called with non-zero number': function (test) {
+    var called = 0;
+    var val = null;
+    var fn = overload([
+      [overload.numberOptionalWithDefault(5), overload.func, function (n) {
+        called++;
+        val = n;
+      }]
+    ]);
+    fn(3, function() {});
+    test.equals(called, 1, 'overload not called');
+    test.equals(val, 3);
+    test.done();
+  },
+
+  'number optional parameter, called with zero': function (test) {
+    var called = 0;
+    var val = null;
+    var fn = overload([
+      [overload.numberOptionalWithDefault(5), overload.func, function (n) {
+        called++;
+        val = n;
+      }]
+    ]);
+    fn(0, function() {});
+    test.equals(called, 1, 'overload not called');
+    test.equals(val, 0);
+    test.done();
+  },
+
   'callback, with default value': function (test) {
     var called = 0;
     var fn = overload([
