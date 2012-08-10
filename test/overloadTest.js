@@ -192,6 +192,21 @@ module.exports = {
     test.done();
   },
 
+  'string optional parameter, called with empty string': function (test) {
+    var called = 0;
+    var val = null;
+    var fn = overload([
+      [overload.stringOptionalWithDefault("hello world"), overload.func, function (n) {
+        called++;
+        val = n;
+      }]
+    ]);
+    fn("", function() {});
+    test.equals(called, 1, 'overload not called');
+    test.equals(val, "");
+    test.done();
+  },
+
   'callback, with default value': function (test) {
     var called = 0;
     var fn = overload([
